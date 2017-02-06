@@ -18,8 +18,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `raspberrypints`
 --
-CREATE DATABASE IF NOT EXISTS `raspberrypints` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `raspberrypints`;
+CREATE DATABASE IF NOT EXISTS `rp` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `rp`;
 
 -- --------------------------------------------------------
 
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `beerStyles` (
 	`srmMax` decimal(2) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -197,7 +197,6 @@ CREATE TABLE `config` (
 	`showOnPanel` tinyint(2) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `configName_UNIQUE` (`configName`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
@@ -234,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `kegTypes` (
 	`maxAmount` decimal(6,2) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -270,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `kegStatuses` (
 	`name` text NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`code`)
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
 
@@ -310,7 +309,7 @@ CREATE TABLE IF NOT EXISTS `kegs` (
 	`active` tinyint(1) NOT NULL DEFAULT 1,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`kegStatusCode`) REFERENCES kegStatuses(`Code`) ON DELETE CASCADE,
 	FOREIGN KEY (`kegTypeId`) REFERENCES kegTypes(`id`) ON DELETE CASCADE
@@ -337,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `taps` (
 	`currentAmount` decimal(6,1) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (`beerId`) REFERENCES beers(`id`) ON DELETE CASCADE,
 	FOREIGN KEY (`kegId`) REFERENCES kegs(`id`) ON DELETE CASCADE
@@ -355,7 +354,7 @@ CREATE TABLE IF NOT EXISTS `pours` (
 	`amountPoured` decimal(6,1) NOT NULL,
 	`createdDate` TIMESTAMP NULL,
 	`modifiedDate` TIMESTAMP NULL,
-	
+
 	PRIMARY KEY (`id`),
 	FOREIGN KEY (tapId) REFERENCES taps(id) ON DELETE CASCADE
 ) ENGINE=InnoDB	DEFAULT CHARSET=latin1;
