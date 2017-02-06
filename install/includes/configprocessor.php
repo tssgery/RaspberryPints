@@ -51,9 +51,9 @@ echo "Checking DB connectivity...";
 flush();
 $con=mysqli_connect($servername,"root",$rootpass);
 
-if (mysqli_connect_errno())
+if (!$con)
 {
-$validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
+  $validerror .= "<br><strong>Cannot connect the the database using the supplied information.</strong>";
 }
 echo "Success!<br>";
 flush();
@@ -78,7 +78,7 @@ flush();
 
 
 //Display errors and die
-if ($validerror !='') 
+if ($validerror !='')
 	{
 		echo "<html><body>";
 		echo $validerror;
@@ -94,17 +94,17 @@ if ($action == 'remove')
 	$con=mysqli_connect($servername,"root",$rootpass);
 	// Check connection
 
-	if (mysqli_connect_errno())
+	if (!$con)
 	{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	echo "Failed to connect to MySQL: " . mysql_error();
 	}
 
-	$sql = "DROP database raspberrypints;";
+	$sql = "DROP database rp;";
 	$result = mysqli_query($con,$sql);
 	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
-	
+
 	echo "Removing configuration files...";
 	flush();
 	unlink('../../includes/config.php');
@@ -113,16 +113,16 @@ if ($action == 'remove')
 	echo "Success!<br>";
 	flush();
 }
-	
+
 if ($action == 'install')
 {
-	
+
 require_once __DIR__.'/config_files.php';
-	
+
 	//-----------------Create the main config file-----------------
 	echo "Update config files...";
 	flush();
-	
+
 	file_put_contents('../../includes/config.php', $mainconfigstring);
 
 	echo "Success!<br>";
@@ -133,7 +133,7 @@ require_once __DIR__.'/config_files.php';
 
 	file_put_contents('../../admin/includes/conn.php', $adminconfig1);
 	file_put_contents('../../admin/includes/configp.php', $adminconfig2);
-	
+
 	echo "Success!<br>";
 	flush();
 	//-----------------Create RPints User--------------------------
@@ -142,9 +142,9 @@ require_once __DIR__.'/config_files.php';
 	$con=mysqli_connect($servername,"root",$rootpass);
 	// Check connection
 
-	if (mysqli_connect_errno())
+	if (!$con)
 	{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	echo "Failed to connect to MySQL: " . mysql_error();
 	}
 
 	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "'@'" . $servername . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
@@ -158,23 +158,23 @@ require_once __DIR__.'/config_files.php';
 	flush();
 	$dbms_schema = "../../sql/schema.sql";
 
-		
+
 	$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema)) or die('Cannot find SQL schema file. ');
-	
+
 	$sql_query = remove_remarks($sql_query);
 	$sql_query = remove_comments($sql_query);
 	$sql_query = split_sql_file($sql_query, ';');
 
 
-	mysql_connect($servername,'root',$rootpass) or die('error connection');
+	$con=mysqli_connect($servername,'root',$rootpass) or die('error connection');
 
 	$i=1;
 	foreach($sql_query as $sql){
 	//echo $i++;
 	//echo "	";
-	//echo $sql;
+	echo $sql;
 	//echo "<br>";
-	mysql_query($sql) or die('error in query');
+	mysqli_query($con, $sql) or die('error in query');
 	}
 
 	echo "Success!<br>";
@@ -186,9 +186,9 @@ require_once __DIR__.'/config_files.php';
 	$con=mysqli_connect($servername,"root",$rootpass,"raspberrypints");
 	// Check connection
 
-	if (mysqli_connect_errno())
+	if (!$con)
 	{
-	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	echo "Failed to connect to MySQL: " . mysql_error();
 	}
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
@@ -198,31 +198,31 @@ require_once __DIR__.'/config_files.php';
 	flush();
 	//-----------------Load the sample data if requested-----------
 
-		if(!empty($_POST['sampledata'])) 
+		if(!empty($_POST['sampledata']))
 		{
 			echo "Adding sample data...";
 			flush();
-			
+
 			$dbms_schema = "../../sql/test_data.sql";
 
-		
+
 			$sql_query = @fread(@fopen($dbms_schema, 'r'), @filesize($dbms_schema)) or die('Cannot find SQL schema file. ');
-			
+
 			$sql_query = remove_remarks($sql_query);
 			$sql_query = remove_comments($sql_query);
 			$sql_query = split_sql_file($sql_query, ';');
 
 
-			mysql_connect($servername,'root',$rootpass) or die('error connection');
+			$con=mysqli_connect($servername,'root',$rootpass) or die('error connection');
 
 			$i=1;
 			foreach($sql_query as $sql){
 			//echo $i++;
 			//echo "	";
-			mysql_query($sql) or die('error in query');
+			mysqli_query($con, $sql) or die('error in query');
 			}
 
-			
+
 			echo "Success!<br>";
 			flush();
 		}
