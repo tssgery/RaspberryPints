@@ -2,6 +2,9 @@ This is a fork of the RaspberryPints project
 
 Changes include:
 
+0.4.0
+* Added Session IPA to list of beer styles
+
 0.3.0
 * Made sure that application logos are stored in data directory
 * Downloads brewery images and stores locally if possible
