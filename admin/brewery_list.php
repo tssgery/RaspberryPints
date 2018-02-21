@@ -14,7 +14,7 @@ require_once __DIR__.'/includes/models/brewery.php';
 require_once __DIR__.'/includes/managers/brewery_manager.php';
 
 $htmlHelper = new HtmlHelper();
-$breweryManager = new BreweryManager();
+$breweryManager = new BreweryManager($con);
 
 if (isset($_POST['inactivateBrewery'])) {
 	$breweryManager->Inactivate($_POST['id']);

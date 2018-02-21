@@ -17,9 +17,9 @@ require_once 'includes/managers/kegStatus_manager.php';
 require_once 'includes/managers/kegType_manager.php';
 
 $htmlHelper = new HtmlHelper();
-$kegManager = new KegManager();
-$kegStatusManager = new KegStatusManager();
-$kegTypeManager = new KegTypeManager();
+$kegManager = new KegManager($con);
+$kegStatusManager = new KegStatusManager($con);
+$kegTypeManager = new KegTypeManager($con);
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

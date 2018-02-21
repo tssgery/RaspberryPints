@@ -15,9 +15,9 @@ require_once __DIR__.'/includes/managers/beerStyle_manager.php';
 require_once __DIR__.'/includes/managers/brewery_manager.php';
 
 $htmlHelper = new HtmlHelper();
-$beerManager = new BeerManager();
-$beerStyleManager = new BeerStyleManager();
-$breweryManager = new BreweryManager();
+$beerManager = new BeerManager($con);
+$beerStyleManager = new BeerStyleManager($con);
+$breweryManager = new BreweryManager($con);
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

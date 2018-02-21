@@ -20,26 +20,26 @@
 
 	if($db){
 		// Connect to the database
-		db();
+		$con=db();
 
 
 		$config = array();
 		$sql = "SELECT * FROM config";
-		$qry = mysql_query($sql);
-		while($c = mysql_fetch_array($qry)){
+		$qry = mysqli_query($con,$sql);
+		while($c = mysqli_fetch_array($qry)){
 			$config[$c['configName']] = $c['configValue'];
 		}
 
 		$sql =  "SELECT * FROM vwGetActiveTaps";
-		$qry = mysql_query($sql);
-		while($b = mysql_fetch_array($qry))
+		$qry = mysqli_query($con,$sql);
+		while($b = mysqli_fetch_array($qry))
 		{
 			$beeritem = array(
 				"id" => $b['id'],
 				"beername" => $b['name'],
 				"style" => $b['style'],
-        "brewery" => $b['breweryName'],
-        "breweryImage" => $b['breweryImageUrl'],
+        		"brewery" => $b['breweryName'],
+        		"breweryImage" => $b['breweryImageUrl'],
 				"notes" => $b['notes'],
 				"abv" => $b['abv'],
 				"srm" => $b['srmAct'],
@@ -53,7 +53,7 @@
 			$beers[$b['tapNumber']] = $beeritem;
 		}
 
-		$tapManager = new TapManager();
+		$tapManager = new TapManager($con);
 		$numberOfTaps = $tapManager->GetTapNumber();
 	}
 ?>
@@ -91,9 +91,10 @@
 						<?php
 							if (mb_strlen($config[ConfigNames::HeaderText], 'UTF-8') > ($config[ConfigNames::HeaderTextTruncLen])) {
 								$headerTextTrunced = substr($config[ConfigNames::HeaderText],0,$config[ConfigNames::HeaderTextTruncLen]) . "...";
-								echo $headerTextTrunced ; }
-							else
+								echo $headerTextTrunced;
+							} else {
 								echo $config[ConfigNames::HeaderText];
+							}
 						?>
 					</h1>
 				</div>
@@ -138,7 +139,7 @@
 
             <?php if($config[ConfigNames::ShowBreweryImages]){ ?>
               <th colspan="2" class="headername">
-            <?php } else { ?>}
+            <?php } else { ?>
 						  <th class="headername">
 						<?php } ?>
 							BEER
@@ -214,7 +215,7 @@
     								<img style="display:block; max-width:150px; max-height:150px; width: auto; height:auto;" src="<?php echo $beer['breweryImage']; ?>" />
     							</td>
                   <td class="name" style="border-left: none;" >
-                <?php } else { ?>}
+                <?php } else { ?>
                 	<td class="name" >
     						<?php } ?>
 
@@ -339,7 +340,7 @@
 
     							</td>
                   <td class="name" style="border-left: none;" >
-                <?php } else { ?>}
+                <?php } else { ?>
                 	<td class="name" >
     						<?php } ?>
 									<h1>Nothing on tap</h1>

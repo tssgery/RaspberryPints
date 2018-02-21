@@ -3,6 +3,10 @@ require_once __DIR__.'/../models/brewery.php';
 
 class BreweryManager{
 
+	function __construct($con) {
+		$this->con = $con;
+	}
+
 	function Save($brewery){
 
 		// download the image so we have it locally
@@ -30,15 +34,15 @@ class BreweryManager{
 					"'" . encode($brewery->get_imageUrl()) . "')";
 		}
 
-    mysql_query($sql);
+    	mysqli_query($this->con,$sql);
 	}
 
 	function GetAll(){
 		$sql="SELECT * FROM breweries ORDER BY name";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($con,$sql);
 
 		$breweries = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$brewery = new Brewery();
 			$brewery->setFromArray($i);
 			$breweries[$brewery->get_id()] = $brewery;
@@ -49,10 +53,10 @@ class BreweryManager{
 
 	function GetAllActive(){
 		$sql="SELECT * FROM breweries WHERE active = 1 ORDER BY name";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($this->con,$sql);
 
 		$beers = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$beer = new Brewery();
 			$beer->setFromArray($i);
 			$beers[$beer->get_id()] = $beer;
@@ -63,9 +67,9 @@ class BreweryManager{
 
 	function GetById($id){
 		$sql="SELECT * FROM breweries WHERE id = $id";
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($this->con,$sql);
 
-		if( $i = mysql_fetch_array($qry) ){
+		if( $i = mysqli_fetch_array($qry) ){
 			$brewery = new Brewery();
 			$brewery->setFromArray($i);
 			return $brewery;
@@ -78,7 +82,7 @@ class BreweryManager{
 
 		$sql="UPDATE breweries SET active = 0 WHERE id = $id";
 		//echo $sql; exit();
-		$qry = mysql_query($sql);
+		$qry = mysqli_query($this->con,$sql);
 
 		$_SESSION['successMessage'] = "Brewery successfully deleted.";
 	}
