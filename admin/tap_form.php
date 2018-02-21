@@ -19,10 +19,10 @@ require_once __DIR__.'/includes/managers/kegType_manager.php';
 require_once __DIR__.'/includes/managers/tap_manager.php';
 
 $htmlHelper = new HtmlHelper();
-$tapManager = new TapManager();
-$beerManager = new BeerManager();
-$kegManager = new KegManager();
-$kegTypeManager = new KegTypeManager();
+$tapManager = new TapManager($con);
+$beerManager = new BeerManager($con);
+$kegManager = new KegManager($con);
+$kegTypeManager = new KegTypeManager($con);
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

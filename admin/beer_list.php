@@ -17,8 +17,8 @@ require_once __DIR__.'/includes/managers/beerStyle_manager.php';
 
 
 $htmlHelper = new HtmlHelper();
-$beerManager = new BeerManager();
-$beerStyleManager = new BeerStyleManager();
+$beerManager = new BeerManager($con);
+$beerStyleManager = new BeerStyleManager($con);
 
 if (isset($_POST['inactivateBeer'])) {
 	$beerManager->Inactivate($_POST['id']);

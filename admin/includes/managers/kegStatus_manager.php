@@ -3,25 +3,29 @@ require_once __DIR__.'/../models/kegStatus.php';
 
 class KegStatusManager{
 
+	function __construct($con) {
+		$this->con = $con;
+	}
+
 	function GetAll(){
 		$sql="SELECT * FROM kegStatuses ORDER BY name";
-		$qry = mysql_query($sql);
-		
+		$qry = mysqli_query($this->con,$sql);
+
 		$kegStatuses = array();
-		while($i = mysql_fetch_array($qry)){
+		while($i = mysqli_fetch_array($qry)){
 			$kegStatus = new KegStatus();
 			$kegStatus->setFromArray($i);
-			$kegStatuses[$kegStatus->get_code()] = $kegStatus;		
+			$kegStatuses[$kegStatus->get_code()] = $kegStatus;
 		}
-		
+
 		return $kegStatuses;
-	}	
-		
+	}
+
 	function GetByCode($code){
 		$sql="SELECT * FROM kegStatuses WHERE code = '$code'";
-		$qry = mysql_query($sql);
-		
-		if( $i = mysql_fetch_array($qry) ){		
+		$qry = mysqli_query($this->con,$sql);
+
+		if( $i = mysqli_fetch_array($qry) ){
 			$kegStatus = new KegStatus();
 			$kegStatus->setFromArray($i);
 			return $kegStatus;
@@ -29,5 +33,5 @@ class KegStatusManager{
 
 		return null;
 	}
-	
+
 }

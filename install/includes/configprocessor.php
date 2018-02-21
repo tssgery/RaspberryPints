@@ -50,7 +50,7 @@ flush();
 //Validate DB connectivity
 echo "Checking DB connectivity...";
 flush();
-$con=mysql_connect($servername,"root",$rootpass);
+$con=mysqli_connect($servername,"root",$rootpass);
 
 echo "Success!<br>";
 flush();
@@ -88,12 +88,12 @@ if ($action == 'remove')
 {
 	echo "Deleting " + $databasename + " database...";
 	flush();
-	$con=mysql_connect($servername,"root",$rootpass);
+	$con=mysqli_connect($servername,"root",$rootpass);
 	// Check connection
 
 	$sql = "DROP database " . $databasename . ";";
-	$result = mysql_query($con,$sql);
-	mysql_close($con);
+	$result = mysqli_query($con,$sql);
+	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
 
@@ -153,12 +153,12 @@ require_once __DIR__.'/config_files.php';
 	//-----------------Create DB if it does not exist--------------------------
 	echo "Creating Database...";
 	flush();
-	$con=mysql_connect($servername, "root", $rootpass) or die('error in connection');
+	$con=mysqli_connect($servername, "root", $rootpass) or die('error in connection');
 
 	$sql = "CREATE DATABASE " . $databasename;
-	// $result = mysql_query($con,$sql);
-	mysql_query($sql, $con) or die(mysql_error());
-	# mysql_close($con);
+	// $result = mysqli_query($con,$sql);
+	mysqli_query($con,$sql) or die(mysqli_error());
+	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
 
@@ -175,31 +175,32 @@ require_once __DIR__.'/config_files.php';
 	$sql_query = split_sql_file($sql_query, ';');
 
 
-	mysql_connect($servername,'root',$rootpass) or die('error in connection');
-	mysql_select_db($databasename, $con) or die("Cannot select the database");
+	mysqli_connect($servername,'root',$rootpass) or die('error in connection');
+	mysqli_select_db($con,$databasename) or die("Cannot select the database");
 
 	$i=1;
 	foreach($sql_query as $sql){
-	//echo $i++;
-	//echo "	";
-	//echo $sql;
-	//echo "<br>";
-	mysql_query($sql) or die('error in query');
+		//echo $i++;
+		//echo "	";
+		//echo $sql;
+		//echo "<br>";
+		mysqli_query($con,$sql) or die('error in query');
 	}
 
+	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
 
 	//-----------------Create RPints User--------------------------
 	echo "Creating RPints database user...";
 	flush();
-	$con=mysql_connect($servername,"root",$rootpass) or die('error in connection');
+	$con=mysqli_connect($servername,"root",$rootpass) or die('error in connection');
 	// Check connection
 
 	$sql = "GRANT ALL ON *.* TO '" . $dbuser . "' IDENTIFIED BY '" . $dbpass1 . "' WITH GRANT OPTION;";
-	// $result = mysql_query($con,$sql);
-	mysql_query($sql) or die(mysql_error());
-	# mysql_close($con);
+	// $result = mysqli_query($con,$sql);
+	mysqli_query($con,$sql) or die(mysqli_error());
+	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
 
@@ -207,15 +208,15 @@ require_once __DIR__.'/config_files.php';
 	//-----------------Add the admin user to the Users DB----------
 	echo "Adding new admin user...";
 	flush();
-	$con=mysql_connect($servername,"root",$rootpass) or die('error in connection');
-	mysql_select_db($databasename, $con) or die("Cannot select the database");
+	$con=mysqli_connect($servername,"root",$rootpass) or die('error in connection');
+	mysqli_select_db($databasename, $con) or die("Cannot select the database");
 	// Check connection
 
 	$currentdate = Date('Y-m-d H:i:s');
 	$sql = "INSERT INTO users (username, password, name, email, createdDate, modifiedDate) VALUES ('" . $adminuser . "','" . $adminhash . "','" . $adminname . "','" . $adminemail . "','" . $currentdate . "','" . $currentdate . "');";
-	//$result = mysql_query($con,$sql);
-	mysql_query($sql) or die(mysql_error());
-	# mysql_close($con);
+	//$result = mysqli_query($con,$sql);
+	mysqli_query($con,$sql) or die(mysqli_error());
+	mysqli_close($con);
 	echo "Success!<br>";
 	flush();
 	//-----------------Load the sample data if requested-----------
@@ -234,17 +235,17 @@ require_once __DIR__.'/config_files.php';
 			$sql_query = remove_comments($sql_query);
 			$sql_query = split_sql_file($sql_query, ';');
 
-			$con=mysql_connect($servername,'root',$rootpass) or die('error connection');
-			mysql_select_db($databasename, $con) or die("Cannot select the database");
+			$con=mysqli_connect($servername,'root',$rootpass) or die('error connection');
+			mysqli_select_db($con,$databasename) or die("Cannot select the database");
 
 			$i=1;
 			foreach($sql_query as $sql){
-			//echo $i++;
-			//echo "	";
-			print("SQL: " + $sql);
-			mysql_query($sql) or die(mysql_error());
+				//echo $i++;
+				//echo "	";
+				print("SQL: " + $sql);
+				mysqli_query($con,$sql) or die(mysqli_error());
 			}
-
+			$mysqli_close($con);
 			echo "Success!<br>";
 			flush();
 		}

@@ -5,7 +5,7 @@ class Tap
 	private $_beerId;
 	private $_kegId;
 	private $_tapNumber;
-	private $_avc;
+	private $_abv;
 	private $_srm;
 	private $_ibu;
 	private $_startAmount;
